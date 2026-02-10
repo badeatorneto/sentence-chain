@@ -1,64 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sentence Chain - Collaborative Storytelling Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Chain - Collaborative Storytelling</title>
+    <style>
+        /* --- MERGED STYLES.CSS --- */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-medium: #475569;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-lg: 12px;
+        }
 
-<style>
-/* ===== PASTE OF styles.css ===== */
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
---primary-color:#000;
---primary-dark:#000;
---primary-light:#333;
---secondary-color:#666;
---accent-color:#000;
---text-dark:#000;
---text-medium:#333;
---text-light:#666;
---text-lighter:#999;
---bg-white:#fff;
---bg-light:#fafafa;
---bg-lighter:#f5f5f5;
---bg-dark:#000;
---border-color:#e0e0e0;
---border-light:#f0f0f0;
---font-primary:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
---section-padding:4rem 0;
---container-padding:1.5rem;
---radius-md:6px;
---transition-base:.2s ease;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; line-height: 1.6; color: var(--text-dark); background-color: var(--bg-light); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
 
-body{font-family:var(--font-primary);color:var(--text-dark);background:#fff;line-height:1.6}
+        /* --- SPA SECTION CONTROL --- */
+        .page-section { display: none; min-height: 80vh; }
+        .page-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* (shortened for readability in this message — paste your full CSS here exactly) */
-</style>
+        /* --- NAVBAR --- */
+        .navbar { background: var(--bg-white); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { height: 70px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); cursor: pointer; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-link { text-decoration: none; color: var(--text-medium); font-weight: 500; cursor: pointer; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: var(--primary-color); }
+
+        /* --- HERO & CONTENT --- */
+        .hero { padding: 4rem 0; text-align: center; background: white; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
+        .story-container { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); }
+        .sentence-item { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+        .author-tag { font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; }
+
+        /* --- FORMS --- */
+        .input-group { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+        input, textarea { width: 100%; padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; }
+        .btn { background: var(--primary-color); color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: var(--primary-hover); }
+
+        /* --- FOOTER --- */
+        .footer { margin-top: 4rem; padding: 3rem 0; background: white; border-top: 1px solid var(--border-color); text-align: center; }
+
+        /* --- ABOUT & HOW IT WORKS CARDS --- */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .card { background: white; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); }
+        .step-num { width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<!-- ===== PASTE OF index.html BODY CONTENT ===== -->
-<nav class="navbar">
-<div class="container nav-container">
-<div class="nav-brand"><a href="#">Sentence Chain</a></div>
-</div>
-</nav>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-brand" onclick="showPage('home')">Sentence Chain</div>
+            <ul class="nav-menu">
+                <li><a class="nav-link active" onclick="showPage('home')">Home</a></li>
+                <li><a class="nav-link" onclick="showPage('archive')">Archive</a></li>
+                <li><a class="nav-link" onclick="showPage('about')">About</a></li>
+                <li><a class="nav-link" onclick="showPage('how-it-works')">How It Works</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<section class="hero">
-<div class="container hero-content">
-<h1 class="hero-title">Build Today's Story — One Sentence at a Time</h1>
-<p class="hero-subtitle">Write one sentence and become part of a global chain of creativity.</p>
-</div>
-</section>
+    <main id="home" class="page-section active">
+        <section class="hero">
+            <div class="container">
+                <h1>Today's Story</h1>
+                <p>Collaborative storytelling, one sentence at a time.</p>
+            </div>
+        </section>
+        <div class="container">
+            <div class="story-container">
+                <div id="story-display">
+                    </div>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Your Username">
+                    <textarea id="sentence-input" placeholder="Write the next sentence..." maxlength="200"></textarea>
+                    <button class="btn" onclick="addSentence()">Add to Chain</button>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<!-- keep the rest of your HTML exactly the same -->
+    <section id="archive" class="page-section">
+        <div class="hero">
+            <div class="container">
+                <h1>Story Archive</h1>
+                <p>Look back at completed stories from the past.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div id="archive-list" class="feature-grid">
+                <div class="card">
+                    <h3>The Midnight Train</h3>
+                    <p class="author-tag">Completed: Feb 9, 2026</p>
+                    <p>A collection of 42 sentences about a journey through time...</p>
+                    <button class="btn" style="margin-top:1rem; padding: 0.5rem 1rem;">Read Full</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Optional: paste your script.js here -->
-<script>
-/* paste script.js here later */
-</script>
+    <section id="about" class="page-section">
+        <div class="hero">
+            <div class="container">
+                <h1>About the Project</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card">
+                <h2>Our Mission</h2>
+                <p>Sentence Chain was created to connect people through the simple act of writing. Every day, a new story starts. Anyone can contribute, but you can only add one sentence per day.</p>
+                <div class="feature-grid">
+                    <div class="card">
+                        <h3>Creative</h3>
+                        <p>Push your imagination to fit the current narrative.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Community</h3>
+                        <p>Join hundreds of writers in a single thread.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section id="how-it-works" class="page-section">
+        <div class="hero">
+            <div class="container">
+                <h1>How It Works</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="step-card card" style="margin-bottom: 1rem;">
+                <div class="step-num">1</div>
+                <h3>Read</h3>
+                <p>Read what has been written so far today to get the vibe.</p>
+            </div>
+            <div class="step-card card" style="margin-bottom: 1rem;">
+                <div class="step-num">2</div>
+                <h3>Write</h3>
+                <p>Enter your username and craft one perfect sentence.</p>
+            </div>
+            <div class="step-card card">
+                <div class="step-num">3</div>
+                <h3>Wait</h3>
+                <p>Once you submit, you've contributed for the day. Come back tomorrow for a new story!</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Sentence Chain. Created by Badeatorneto.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- ROUTING LOGIC ---
+        function showPage(pageId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Show the selected section
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update Nav Links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if(link.innerText.toLowerCase().replace(" ", "-") === pageId) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Special case for brand click
+            if(pageId === 'home') document.querySelector('.nav-link').classList.add('active');
+        }
+
+        // --- STORY LOGIC ---
+        let story = [
+            { user: "System", text: "Once upon a time in a city made of glass..." }
+        ];
+
+        function renderStory() {
+            const display = document.getElementById('story-display');
+            display.innerHTML = story.map(item => `
+                <div class="sentence-item">
+                    <p>${item.text}</p>
+                    <span class="author-tag">— ${item.user}</span>
+                </div>
+            `).join('');
+        }
+
+        function addSentence() {
+            const user = document.getElementById('username').value;
+            const text = document.getElementById('sentence-input').value;
+
+            if(!user || !text) {
+                alert("Please fill in both fields!");
+                return;
+            }
+
+            story.push({ user, text });
+            document.getElementById('sentence-input').value = '';
+            renderStory();
+        }
+
+        // Initial Load
+        window.onload = renderStory;
+    </script>
 </body>
 </html>
